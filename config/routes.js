@@ -46,7 +46,15 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  // Find song
+  'get /songs/:id': 'SongController.get',
   'get /songs': 'SongController.get',
-  'get /songs/:id': 'SongController.get'
+
+  // Update/create song
+  'put /songs/:id': 'SongController.post',
+  'post /songs': 'SongController.post',
+
+  // Delete song
+  'delete /songs/:id': 'SongController.delete'
 
 };
