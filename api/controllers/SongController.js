@@ -7,10 +7,6 @@
 
 module.exports = {
 
-	songsToFullJSON: function(songs) {
-		return [{songData: songs}]; // TODO
-	},
-
 	get: function(req, res, next) {
 		var params = req.params.all();
 		
@@ -19,8 +15,9 @@ module.exports = {
 			Song.findOne(params)
 			.then(function(song) {
 				if (song) {
-					var songsFullJSON = sails.controllers.song.songsToFullJSON([song]);
-					res.json(songsFullJSON[0]);
+					res.json({
+						'song': song
+					});
 				} else {
 					res.notFound();
 				}
@@ -34,8 +31,9 @@ module.exports = {
 			Song.find(params)
 			.then(function(songs) {
 				if (songs) {
-					var songsFullJSON = sails.controllers.song.songsToFullJSON(songs);
-					res.json(songsFullJSON);
+					res.json({
+						'songs': songs
+					});
 				} else {
 					res.notFound();
 				}
@@ -58,8 +56,9 @@ module.exports = {
 					res.notFound();
 				}
 
-				var songsFullJSON = sails.controllers.song.songsToFullJSON(updatedSongs);
-				res.json(songsFullJSON[0]);
+				res.json({
+					'song': updatedSongs[0]
+				});
 			})
 			.catch(function(error) {
 				res.status(500);
@@ -69,8 +68,9 @@ module.exports = {
 			// Create song
 			Song.create(params)
 			.then(function(song) {
-				var songsFullJSON = sails.controllers.song.songsToFullJSON([song]);
-				res.json(songsFullJSON[0]);
+				res.json({
+					'song': song
+				});
 			})
 			.catch(function(error) {
 				res.status(500);
@@ -90,8 +90,7 @@ module.exports = {
 					res.notFound();
 				}
 
-				var songsFullJSON = sails.controllers.song.songsToFullJSON(deletedSongs);
-				res.json(songsFullJSON);
+				res.json({});
 			})
 			.catch(function(error) {
 				res.status(500);

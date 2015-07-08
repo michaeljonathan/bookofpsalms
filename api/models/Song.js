@@ -21,8 +21,7 @@ module.exports = {
     },
 
     lyricsVersions: {
-      collection: 'LyricsVersion',
-      via: 'song'
+      type: 'json'
     }
 
   }
