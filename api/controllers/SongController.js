@@ -47,10 +47,10 @@ module.exports = {
 
 	post: function(req, res, next) {
 		var params = req.params.all();
-		
+
 		if (params.id) {
 			// Update song
-			Song.update(params.id, params)
+			Song.update(params.id, params.song)
 			.then(function(updatedSongs) {
 				if (updatedSongs.length == 0) {
 					res.notFound();
@@ -66,7 +66,7 @@ module.exports = {
 			});
 		} else {
 			// Create song
-			Song.create(params)
+			Song.create(params.song)
 			.then(function(song) {
 				res.json({
 					'song': song

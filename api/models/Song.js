@@ -22,6 +22,10 @@ module.exports = {
 
     lyricsVersions: {
       type: 'json'
+    },
+
+    lyricsBlocks: {
+      type: 'json'
     }
 
   }
