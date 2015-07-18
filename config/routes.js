@@ -46,6 +46,8 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  /* Songs */
+
   // Find song
   'get /songs/:id': 'SongController.get',
   'get /songs': 'SongController.get',
@@ -55,6 +57,36 @@ module.exports.routes = {
   'post /songs': 'SongController.post',
 
   // Delete song
-  'delete /songs/:id': 'SongController.delete'
+  'delete /songs/:id': 'SongController.delete',
+
+
+
+  /* Services */
+
+  // Find service
+  'get /services/:id': 'ServiceController.get',
+  'get /services': 'ServiceController.get',
+
+  // Update/create service
+  'put /services/:id': 'ServiceController.post',
+  'post /services': 'ServiceController.post',
+
+  // Delete service
+  'delete /services/:id': 'ServiceController.delete',
+
+
+
+  /* ServiceItems */
+
+  // Find service
+  'get /serviceItems/:id': 'ServiceItemController.get',
+  'get /serviceItems': 'ServiceItemController.get',
+
+  // Update/create service
+  'put /serviceItems/:id': 'ServiceItemController.post',
+  'post /serviceItems': 'ServiceItemController.post',
+
+  // Delete service
+  'delete /serviceItems/:id': 'ServiceItemController.delete',
 
 };
