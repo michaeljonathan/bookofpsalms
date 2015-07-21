@@ -14,7 +14,7 @@ module.exports = {
       required: true
     },
 
-    items: {
+    itemsList: {
       type: 'array'
     }
 

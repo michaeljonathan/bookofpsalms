@@ -5,6 +5,13 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+var serviceItemToJSON = function(serviceItem) {
+	// For some reason, having a link back to the service
+	// will mess up Ember Data.
+	delete serviceItem.service;
+	return serviceItem;
+};
+
 module.exports = {
 
 	get: function(req, res, next) {
@@ -15,11 +22,8 @@ module.exports = {
 			ServiceItem.findOne(params)
 			.then(function(serviceItem) {
 				if (serviceItem) {
-					// For some reason, having a link back to the service
-					// will mess up Ember Data.
-					delete serviceItem.service;
 					res.json({
-						'serviceItem': serviceItem
+						'serviceItem': serviceItemToJSON(serviceItem)
 					});
 				} else {
 					res.notFound();
@@ -34,8 +38,12 @@ module.exports = {
 			ServiceItem.find(params)
 			.then(function(serviceItems) {
 				if (serviceItems) {
+					var serviceItemsJSON = [];
+					for (var i in serviceItems) {
+						serviceItemsJSON.push(serviceItemToJSON(serviceItems[i]));
+					}
 					res.json({
-						'serviceItems': serviceItems
+						'serviceItems': serviceItemsJSON
 					});
 				} else {
 					res.notFound();
@@ -58,9 +66,8 @@ module.exports = {
 				if (updatedServiceItems.length == 0) {
 					res.notFound();
 				}
-
 				res.json({
-					'serviceItem': updatedServiceItems[0]
+					'serviceItem': serviceItemToJSON(updatedServiceItems[0])
 				});
 			})
 			.catch(function(error) {
@@ -69,10 +76,25 @@ module.exports = {
 			});
 		} else {
 			// Create serviceItem
-			ServiceItem.create(params.serviceItem)
-			.then(function(serviceItem) {
+			var paramsServiceItem = params.serviceItem,
+				serviceItem,
+				service;
+			if (!(paramsServiceItem && paramsServiceItem.service)) {
+				res.badRequest();
+			}
+			Service.findOne({id: paramsServiceItem.service})
+			.then(function(foundService) {
+				service = foundService;
+				return ServiceItem.create(paramsServiceItem);
+			})
+			.then(function(createdServiceItem) {
+				serviceItem = createdServiceItem;
+				// Add the serviceItem to its service
+				service.itemsList.push(serviceItem.id);
+				return service.save();
+			}).then(function() {
 				res.json({
-					'serviceItem': serviceItem
+					'serviceItem': serviceItemToJSON(serviceItem)
 				});
 			})
 			.catch(function(error) {
