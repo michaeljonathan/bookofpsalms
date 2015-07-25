@@ -109,12 +109,30 @@ module.exports = {
 
 		if (params.id) {
 			// Delete one serviceItem
+			var deletedServiceItem;
 			ServiceItem.destroy(params.id)
 			.then(function(deletedServiceItems) {
 				if (deletedServiceItems.length == 0) {
 					res.notFound();
+					return;
 				}
 
+				deletedServiceItem = deletedServiceItems[0];
+				return Service.findOne({id: deletedServiceItem.service});
+			}).then(function(service) {
+				var unfilteredItemsList = service.itemsList,
+					filteredItemsList = [],
+					i,
+					item;
+				for (i = 0; i < unfilteredItemsList.length; i++) {
+					itemID = unfilteredItemsList[i];
+					if (itemID !== deletedServiceItem.id) {
+						filteredItemsList.push(itemID);
+					}
+				}
+				service.itemsList = filteredItemsList;
+				return service.save();
+			}).then(function() {
 				res.json({});
 			})
 			.catch(function(error) {
